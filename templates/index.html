@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} - Rock's Blog{% endblock %}
+{% block tab %}
+
+    <li><a href="{{ root_url }}" class="current">主页</a></li>
+    <li><a href="{{ root_url }}tech.html">技术</a></li>
+    <li><a href="{{ root_url }}life.html">生活</a></li>
+    <li><a href="{{ root_url }}about.html">关于</a></li>
+
+{% endblock %}
+{% block content %}
+
+    {% if blog_list %}
+        {% for item in blog_list %}
+            <div class="post_section"><span class="bottom"></span>
+
+                <h2><a href="{{ item.title_url }}">{{ item.title }}</a></h2>
+
+                <p>日期:&nbsp{{ item.date }}</p>
+                <!-- <a href="#"><img src="images/image_01.jpg" alt="image 1" /></a> -->
+
+                <p>{{ item.content }}</p>
+
+                <div class="cleaner"></div>
+                <!-- <div class="category">标签: <a href="#">Freebies</a>, <a href="#">Templates</a></div> -->
+                <div class="category">标签:&nbsp{% for label, url in item.labels.items() %}&nbsp<a href="{{ url }}">{{ label }}</a>&nbsp{% endfor %}</div>
+                <!--<div class="category">标签:&nbsp{{ item.labels | join(", ") }}</div>-->
+                <div class="cleaner"></div>
+
+            </div>
+        {% endfor %}
+    {% else %}
+        {{ blog_html | safe }}
+    {% endif %}
+
+{% endblock %}
+{% block label %}
+
+    {% for key in labels %}
+        <li><a href="{{ key[1] }}">{{ key[0] }}</a></li>
+    {% endfor %}
+
+{% endblock %}
+{% block date %}
+
+    {% for key in dates %}
+        <li><a href="{{ key[1] }}">{{ key[0] }}</a></li>
+    {% endfor %}
+
+{% endblock %}

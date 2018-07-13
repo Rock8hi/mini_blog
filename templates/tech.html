@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Rock's Blog</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <link href="{{ url_for('static', filename='style_no_sidebar.css') }}" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+<div id="rock_header_wrapper">
+    <div id="rock_header">
+        
+        <div id="site_title">
+            <h1>
+                <a href="{{ root_url }}"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="tripod blog" /></a>
+                <span>Enjoy life, Enjoy coding</span>
+            </h1>
+        </div>
+    
+    </div> <!-- end of header -->
+    
+    <div id="rock_menu">
+    
+        <ul>
+            <li><a href="{{ root_url }}">主页</a></li>
+            <li><a href="{{ root_url }}tech.html" class="current">技术</a></li>
+            <li><a href="{{ root_url }}life.html">生活</a></li>
+            <li><a href="{{ root_url }}about.html">关于</a></li>
+        </ul>
+    
+    </div> <!-- end of rock_menu -->
+    
+</div> <!-- end of header wrapper -->
+
+<div id="rock_content_wrapper">
+
+    <div id="rock_content">
+    
+        <h2>Web Blog Services</h2>
+        <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Praesent aliquam velit a magna sodales quis elementum ipsum auctor. Ut at metus leo, et dictum sem</p>
+        
+        <div class="cleaner_h30"></div>
+    
+        <div class="service_box">
+            <h4><a href="#">Lorem ipsum dolor sit amet</a></h4>
+            
+        <div class="left">
+                <img src="images/chart1.png" alt="image" />
+            </div>
+            <div class="right">
+                <p>Curabitur ullamcorper neque et justo aliquet at pretium orci  scelerisque. Mauris sodales tristique dignissim. Phasellus ut augue  nibh. Aliquam vel libero sit amet mauris posuere ullamcorper  sollicitudin ac eros. Vestibulum auctor euismod mi et tincidunt. </p>
+            
+            </div>
+            <div class="cleaner"></div>
+            <ol>
+                    <li>Cum sociis natoque penatibus et magnis dis parturient montes</li>
+                    <li>Donec massa nisl, consequat eu vulputate ut</li>
+                    <li>Sed fermentum arcu in enim euismod quis lobortis</li>
+                    <li>Fusce fringilla, dui sed blandit luctus, arcu augue</li>
+                    <li>Sed id magna scelerisque augue consequat sagittis</li>
+            </ol>
+            <div class="cleaner"></div>
+        </div>
+        
+        <div class="service_box">
+        
+        <h4><a href="#">Morbi sed nulla ac est cursus suscipit</a></h4>
+        
+          <div class="left">
+            <img src="images/chart2.png" alt="image" />
+            </div>
+            <div class="right">
+                <p>Phasellus diam orci, rhoncus sed condimentum et, sodales vel leo. Nunc  dignissim quam a nisi placerat gravida. Suspendisse potenti. Curabitur  suscipit lacus vestibulum mi accumsan bibendum. Vivamus gravida, dui  eget tincidunt rutrum, ante justo malesuada lacus.</p>
+                    
+                
+            </div>
+            <div class="cleaner"></div>
+            <ol>
+                    <li>Fusce fringilla, dui sed blandit luctus, arcu augue</li>
+                    <li>Sed id magna scelerisque augue consequat sagittis</li>
+                    <li>Cum sociis natoque penatibus et magnis dis parturient montes</li>
+                    <li>Donec massa nisl, consequat eu vulputate ut</li>
+                    <li>Sed fermentum arcu in enim euismod quis lobortis</li>
+             </ol>
+        </div>
+        
+    </div> <!-- end of comment -->
+    
+    <div id="rock_sidebar_two">
+        
+        <div class="banner_250x200">
+            <a href="#"><img src="{{ url_for('static', filename='images/250x200_banner.jpg') }}" alt="templates" /></a>
+        </div>
+        
+        <div class="banner_125x125">
+            <a href="#"><img src="{{ url_for('static', filename='images/ads.jpg') }}" alt="web 1" /></a>
+            <a href="#"><img src="{{ url_for('static', filename='images/ads.jpg') }}" alt="web 2" /></a>
+            <a href="#"><img src="{{ url_for('static', filename='images/ads.jpg') }}" alt="templates 2" /></a>
+            <a href="#"><img src="{{ url_for('static', filename='images/ads.jpg') }}" alt="templates 1" /></a>
+        </div>
+       
+        <!-- <div class="cleaner_h40"></div>
+        
+        <div class="sidebar_two_box">
+        
+            <h4>友情链接</h4>
+            <ul class="rock_list">
+                <li><a href="#">Free CSS Templates</a></li>
+                <li><a href="#">Flash Templates</a></li>
+                <li><a href="#">Website Templates</a></li>
+                <li><a href="#">Web Design Blog</a></li>
+                <li><a href="#">Flash Web Gallery</a></li>
+                <li><a href="#">Curabitur sed lacinia</a></li>
+                <li><a href="#">Vestibulum laoreet tincidunt</a></li>
+                <li><a href="#">Nullam nec mi enim</a></li>
+                <li><a href="#">Aliquam quam nulla</a></li>
+                <li><a href="#">Curabitur non felis massa</a></li>
+            </ul>
+        </div> -->
+        
+    </div>
+
+    <div class="cleaner"></div>
+</div> <!-- end of content wrapper -->
+
+<div id="rock_footer_wrapper">
+    <div id="rock_footer">
+        Copyright © 2018 <a href="#">Rock's blog</a> | Mail: rock8hi@gmail.com
+    </div>
+</div>
+
+</body>
+</html>
