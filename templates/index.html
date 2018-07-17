@@ -2,10 +2,18 @@
 {% block title %}{{ title }} - Rock's Blog{% endblock %}
 {% block tab %}
 
-    <li><a href="{{ root_url }}" class="current">主页</a></li>
-    <li><a href="{{ root_url }}tech.html">技术</a></li>
-    <li><a href="{{ root_url }}life.html">生活</a></li>
-    <li><a href="{{ root_url }}about.html">关于</a></li>
+    <!--<li><a href="{{ root_url }}" class="current">主页</a></li>-->
+    <!--<li><a href="{{ root_url }}tech.html">技术</a></li>-->
+    <!--<li><a href="{{ root_url }}life.html">生活</a></li>-->
+    <!--<li><a href="{{ url_for('show_tab_about') }}">关于</a></li>-->
+
+    {% for key in tabs %}
+        {% if key[2] %}
+            <li><a href="{{ key[1] }}" class="current">{{ key[0] }}</a></li>
+        {% else %}
+            <li><a href="{{ key[1] }}">{{ key[0] }}</a></li>
+        {% endif %}
+    {% endfor %}
 
 {% endblock %}
 {% block content %}
