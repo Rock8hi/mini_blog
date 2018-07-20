@@ -10,24 +10,17 @@ import os
 import re
 import codecs
 import shutil
-import logging
 import markdown
 from dbhelper import thumbnail_helper as thumbnail
 from dbhelper import hits_helper as hits
 
 
-DEBUG_MODE = True
-# DEBUG_MODE = False
-
-thumbnail.init(DEBUG_MODE)
-hits.init(DEBUG_MODE)
-
-
 app = Flask(__name__)
-if not DEBUG_MODE:
-    app.logger.setLevel(logging.INFO)
-else:
-    app.debug = True
+# app.debug = True
+app.debug = False
+
+thumbnail.init(app.debug)
+hits.init(app.debug)
 
 
 INPUT_PATH = os.path.join(app.root_path, 'markdown')
@@ -37,6 +30,26 @@ OUTPUT_PATH = app.static_folder
 @app.before_first_request
 def before_first_request():
     app.logger.debug('before_first_request')
+
+
+@app.before_request
+def before_request():
+    app.logger.debug('before_request')
+    update_hits()
+
+
+def update_hits():
+    hits.save(get_ip(), request.path)
+
+
+def get_ip():
+    if 'X-Forwarded-For' not in request.headers:
+        return '0.0.0.0'
+    ip = request.headers['X-Forwarded-For']
+    ips = ip.split(',')
+    if len(ips) > 1:
+        return ips[1]
+    return ip
 
 
 # 过滤出页面分类
@@ -73,7 +86,8 @@ def make_markdown_html(file_path):
             blog_html = blog_html.replace(r'<div class="codehilite">',
                                           r'<div class="codehilite" style="overflow-x: auto;">')
             blog_html = re.sub(r'<img\s*(.*?)\s*/>',
-                               r'<img \1 style="border: 2px solid #56d0f9; max-width: 480px; vertical-align: text-bottom;" />',
+                               r'<img \1 style="border: 2px solid #56d0f9; max-width: 480px; vertical-ali'
+                               r'gn: text-bottom;" />',
                                blog_html)
             outfile.write(render_template('index.html',
                                           title='markdown',
@@ -162,7 +176,6 @@ def show_tab_index():
 @app.route('/')
 def show_index():
     app.logger.debug('show_index')
-    update_hits('/')
     blog_list = calc_markdown_thumbnail_list(category='tech')
     return render_template('index.html',
                            title='主页',
@@ -176,7 +189,6 @@ def show_index():
 @app.route('/life.html')
 def show_tab_life():
     app.logger.debug('show_tab_life')
-    update_hits('/life.html')
     blog_list = calc_markdown_thumbnail_list(category='life')
     return render_template('index.html',
                            title='life',
@@ -195,7 +207,6 @@ def show_tab_tech():
 @app.route('/about.html')
 def show_tab_about():
     app.logger.debug('show_tab_about')
-    update_hits('/about.html')
     return render_template('about.html')
 
 
@@ -246,14 +257,12 @@ def show_markdown(file_path):
 @app.route('/tech/<file_path>')
 def show_tech_markdown(file_path):
     app.logger.debug('show_tech_markdown file_path = %s' % file_path)
-    update_hits('/tech/%s' % file_path)
     return show_markdown('tech/%s' % file_path)
 
 
 @app.route('/life/<file_path>')
 def show_life_markdown(file_path):
     app.logger.debug('show_life_markdown file_path = %s' % file_path)
-    update_hits('/life/%s' % file_path)
     return show_markdown('life/%s' % file_path)
 
 
@@ -262,10 +271,8 @@ def show_life_markdown(file_path):
 @app.route('/upload', methods=['POST'])
 def show_upload_file():
     if request.method == 'GET':
-        update_hits('/upload.html')
         return app.send_static_file('upload.html')
     if request.method == 'POST':
-        update_hits('/upload')
         if not request.form.get('check_token'):
             return 'please input token.'
         if request.form['check_token'] != 'rock':
@@ -313,24 +320,9 @@ def check_static_image(file_path):
 
 @app.route('/<path:file_path>')
 def show_static(file_path):
-    update_hits(file_path)
     app.logger.debug('show_static file_path = %s' % file_path)
     check_static_image(file_path)
     return app.send_static_file(file_path)
-
-
-def update_hits(url):
-    ip = get_real_ip()
-    hits.save(ip, url)
-
-
-def get_real_ip():
-    if 'X-Forwarded-For' not in request.headers:
-        return '0.0.0.0'
-    real_ip = request.headers['X-Forwarded-For']
-    if len(real_ip.split(',')) > 1:
-        return real_ip.split(',')[1]
-    return real_ip
 
 
 if __name__ == '__main__':
