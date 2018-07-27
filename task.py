@@ -5,29 +5,17 @@ import os
 import re
 import codecs
 import random
-import hashlib
-from dbhelper import thumbnail_helper
+from dbhelper import thumbnail_helper as helper
+import utils
 
 
-INPUT_PATH = 'markdown'
-OUTPUT_PATH = 'static'
-
-
-def calc_file_md5(filename):
-    if not os.path.exists(filename) or not os.path.isfile(filename):
-        return
-    if os.path.getsize(filename) > 64 * 1024:
-        return
-    with open(filename, 'rb') as f:
-        md5obj = hashlib.md5()
-        md5obj.update(f.read())
-        return md5obj.hexdigest()
+MARKDOWN_PATH = 'markdown'
 
 
 # 过滤出markdown中的日期、标签、描述等信息
 def match_comment(markdown_string=''):
-    pattern1 = re.compile(r"<!--([\s\S]*?)-->")
-    pattern2 = re.compile(r"(?<=<!--)[\s\S]*(?=-->)")
+    pattern1 = re.compile(r'<!--([\s\S]*?)-->')
+    pattern2 = re.compile(r'(?<=<!--)[\s\S]*(?=-->)')
     result = {}
     if len(markdown_string) == 0:
         return
@@ -55,37 +43,44 @@ def update_markdown_thumbnail(md_path, insert=True):
         comments = match_comment(infile.read())
 
         title = comments.get('title', '')
-        date = comments.get('date', '')
+        date = comments.get('date', '').replace('/', '-')
+        dates = date.split('-')
+        if len(dates) == 3:
+            date = dates[0]
+            date += '-'
+            date += dates[1] if len(dates[1]) != 1 else '0' + dates[1]
+            date += '-'
+            date += dates[2] if len(dates[2]) != 1 else '0' + dates[2]
         label = comments.get('label', '')
         desc = comments.get('desc', '')
-        md5 = calc_file_md5(md_path)
-        mtime = os.path.getmtime(md_path)
-
-        md_path = md_path.replace(os.sep, '/')
-        category = md_path.split('/')[1]
-        html_path = os.path.splitext(md_path.replace(INPUT_PATH, OUTPUT_PATH, 1))[0] + '.html'
-        read_count = random.randint(128, 512)
+        md_path = utils.fix_sep(md_path, '/')
 
         if insert:
-            data = [(category, title, date, label, desc, md_path, str(md5), str(mtime), html_path, read_count)]
-            thumbnail_helper.save(data)
+            mtime = os.path.getmtime(md_path)
+            category = md_path.split('/')[1]
+            hits = random.randint(128, 512)
+            data = [(category, title, date, label, desc, md_path, mtime, hits)]
+            helper.save(data)
         else:
-            data = [(title, date, label, desc, str(md5), str(mtime), md_path)]
-            thumbnail_helper.update_thumbnail(data)
+            # 更新db内数据时，只更新markdown内容数据，不更新mtime。
+            # 当请求某个markdown网页时，db内的mtime与markdown文件的mtime做对比，
+            # 如果对比不一致，则重新生成markdown网页并保存，然后更新db内的mtime
+            data = [(title, date, label, desc, md_path)]
+            helper.update_thumbnail(data)
 
 
 def check_markdown(md_path):
-    md_path = md_path.replace(os.sep, '/')
-    result = thumbnail_helper.fetchone(md_path)
+    md_path = utils.fix_sep(md_path, '/')
+    result = helper.fetchone(md_path)
     if result is None:
         return
     if len(result) == 0:
         update_markdown_thumbnail(md_path)
         return
-    if float(result[0][8]) != os.path.getmtime(md_path):
+    if result[0][helper.MODIFIED_TIME] != os.path.getmtime(md_path):
         update_markdown_thumbnail(md_path, False)
         return
-    print('not update: ', md_path)
+    # print('not update: ', md_path)
 
 
 def walk_markdown(dir_path):
@@ -102,10 +97,10 @@ def walk_markdown(dir_path):
 
 
 def run():
-    thumbnail_helper.init()
-    walk_markdown(INPUT_PATH)
-    for item in thumbnail_helper.fetchall():
-        print(item)
+    helper.init()
+    walk_markdown(MARKDOWN_PATH)
+    # for item in helper.fetchall():
+    #     print(item)
 
 
 if __name__ == '__main__':

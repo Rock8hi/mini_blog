@@ -1,12 +1,34 @@
 {% extends 'base.html' %}
+
 {% block title %}{{ title }} - Rock's Blog{% endblock %}
+
+{% block other_heads %}
+    {% if support_pirobox %}
+        <link href="/css_pirobox/white/style.css" media="screen" title="shadow" rel="stylesheet" type="text/css" />
+        <!--<link href="/css_pirobox/white/style.css" media="screen" title="white" rel="stylesheet" type="text/css" />-->
+        <!--<link href="/css_pirobox/black/style.css" media="screen" title="black" rel="stylesheet" type="text/css" />-->
+
+        <script type="text/javascript" src="/js/jquery.min.js"></script>
+        <script type="text/javascript" src="/js/piroBox.1_2.js"></script>
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $().piroBox({
+                    my_speed: 600, // animation speed
+                    bg_alpha: 0.5, // background opacity
+                    radius: 4, // caption rounded corner
+                    scrollImage : false, // true == image follows the page, false == image remains in the same open position
+                    pirobox_next : 'piro_next', // Nav buttons -> piro_next == inside piroBox , piro_next_out == outside piroBox
+                    pirobox_prev : 'piro_prev', // Nav buttons -> piro_prev == inside piroBox , piro_prev_out == outside piroBox
+                    close_all : '.piro_close', // add class .piro_overlay(with comma)if you want overlay click close piroBox
+                    slideShow : 'slideshow', // just delete slideshow between '' if you don't want it.
+                    slideSpeed : 4 // slideshow duration in seconds(3 to 6 Recommended)
+            });
+        });
+        </script>
+    {% endif %}
+{% endblock %}
+
 {% block tab %}
-
-    <!--<li><a href="{{ root_url }}" class="current">主页</a></li>-->
-    <!--<li><a href="{{ root_url }}tech.html">技术</a></li>-->
-    <!--<li><a href="{{ root_url }}life.html">生活</a></li>-->
-    <!--<li><a href="{{ url_for('show_tab_about') }}">关于</a></li>-->
-
     {% for key in tabs %}
         {% if key[2] %}
             <li><a href="{{ key[1] }}" class="current">{{ key[0] }}</a></li>
@@ -14,10 +36,9 @@
             <li><a href="{{ key[1] }}">{{ key[0] }}</a></li>
         {% endif %}
     {% endfor %}
-
 {% endblock %}
-{% block content %}
 
+{% block content %}
     {% if blog_list %}
         {% for item in blog_list %}
             <div class="post_section"><span class="bottom"></span>
@@ -26,13 +47,13 @@
 
                 <p>日期:&nbsp{{ item.date }}</p>
                 <!-- <a href="#"><img src="images/image_01.jpg" alt="image 1" /></a> -->
+                <!--<a href="/images/image_01.jpg" rel="gallery" class="pirobox" title="Curious kitten."> <img src="/images/image_01.jpg" /> </a>-->
 
                 <p>{{ item.content }}</p>
 
                 <div class="cleaner"></div>
                 <!-- <div class="category">标签: <a href="#">Freebies</a>, <a href="#">Templates</a></div> -->
                 <div class="category">标签:&nbsp{% for label, url in item.labels.items() %}&nbsp<a href="{{ url }}">{{ label }}</a>&nbsp{% endfor %}</div>
-                <!--<div class="category">标签:&nbsp{{ item.labels | join(", ") }}</div>-->
                 <div class="cleaner"></div>
 
             </div>
@@ -40,19 +61,16 @@
     {% else %}
         {{ blog_html | safe }}
     {% endif %}
-
 {% endblock %}
-{% block label %}
 
+{% block label %}
     {% for key in labels %}
         <li><a href="{{ key[1] }}">{{ key[0] }}</a></li>
     {% endfor %}
-
 {% endblock %}
-{% block date %}
 
+{% block date %}
     {% for key in dates %}
         <li><a href="{{ key[1] }}">{{ key[0] }}</a></li>
     {% endfor %}
-
 {% endblock %}

@@ -1,4 +1,3 @@
-#!/root/blog/flask/venv/bin/python
 # -*- coding: utf-8
 
 # python sqlite

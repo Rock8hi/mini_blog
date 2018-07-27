@@ -1,7 +1,6 @@
-#!/root/blog/flask/venv/bin/python
 # -*- coding: utf-8
 
-from dbhelper import sqlite3_helper as helper
+from . import sqlite3_helper as helper
 
 
 DB_FILE_PATH = 'mini_blog.db'

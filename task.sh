@@ -12,9 +12,6 @@ if [[ $local_revision < $remote_revision ]] ; then
     echo "need svn update"
     svn update --password 123
     echo "svn update finish"
-    cd ..
-    bash task.sh
-    echo "make thumbnail finish"
 else
     echo "not need svn update"
 fi
