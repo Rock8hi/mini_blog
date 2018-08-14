@@ -10,4 +10,4 @@
 
 主要在flask的基础上使用Python开发，其他还用到bash脚本去检测svn更新。主要支持显示markdown列表到网页上，支持标签列表，支持日期列表，博客转化显示等。
 
-demo展示地址：http://www.kevengame.com/
+demo展示地址：http://www.rockgame.info
